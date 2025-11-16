@@ -2,7 +2,7 @@
   "name": "cabala-frontend",
   "version": "1.0.0",
   "scripts": {
-    "start": "serve -s build",
+    "start": "react-scripts start",
     "build": "react-scripts build"
   },
   "dependencies": {

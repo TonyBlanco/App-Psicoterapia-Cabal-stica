@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head><title>Dashboard Cabalístico</title><style>body{font-family:Arial;background:#f0f8ff;padding:20px;}</style></head>
+  <input id="inputNombre" placeholder="Nombre (Normas No Hipocorísticos)" style="padding:10px;margin-bottom:10px;width:300px;" onkeyup="if(event.key==='Enter') { const nombre = this.value; const fecha = document.getElementById('inputFecha').value || '01/08/1959'; fetch('/calculo?nombre='+encodeURIComponent(nombre)+'&fecha='+encodeURIComponent(fecha)).then(r=>r.json()).then(data => { /* Update state or reload */ location.reload(); }); }">
+<input id="inputFecha" placeholder="Fecha DD/MM/AAAA" style="padding:10px;margin-bottom:10px;width:150px;" value="01/08/1959">
+<button onclick="document.getElementById('inputNombre').dispatchEvent(new KeyboardEvent('keyup', {key:'Enter'}));">Calcular</button>
 <body><div id="root"></div><script type="module" src="/src/index.js"></script></body>
 </html>

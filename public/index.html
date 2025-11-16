@@ -1,0 +1,23 @@
+<script>
+const {useState,useEffect}=React;
+function App() {
+  const [data, setData] = useState({});
+  useEffect(() => {
+    fetch('https://app-psicoterapia-cabal-stica.onrender.com/calculo?nombre=Luis Antonio Blanco Fontela&fecha=01/08/1959')
+      .then(r => r.json()).then(setData);
+  }, []);
+  return React.createElement('div', {style:{padding:'20px', fontFamily:'Arial'}},
+    React.createElement('h1', null, 'Dashboard Holístico Tipheret Armonía'),
+    React.createElement('table', {style:{borderCollapse:'collapse', width:'100%'} },
+      React.createElement('tr', null, React.createElement('th', {style:{border:'1px solid #ccc', padding:'8px'}}, 'Elemento'), React.createElement('th', {style:{border:'1px solid #ccc', padding:'8px'}}, 'Valor')),
+      React.createElement('tr', null, React.createElement('td', {style:{border:'1px solid #ccc', padding:'8px'}}, 'TO Mago'), React.createElement('td', {style:{border:'1px solid #ccc', padding:'8px'}}, data.TO || 'Cargando')),
+      React.createElement('tr', null, React.createElement('td', {style:{border:'1px solid #ccc', padding:'8px'}}, 'PT Justicia'), React.createElement('td', {style:{border:'1px solid #ccc', padding:'8px'}}, data.PT || '')),
+      React.createElement('tr', null, React.createElement('td', {style:{border:'1px solid #ccc', padding:'8px'}}, 'TD Templanza'), React.createElement('td', {style:{border:'1px solid #ccc', padding:'8px'}}, data.TD || ''))),
+    React.createElement('p', null, `Gematria Pitagórica: ${data.gemPit || ''}`),
+    React.createElement('p', null, `Gematria Hebrea Ej (Alef): ${data.gemHebreaEj || ''}`),
+    React.createElement('p', null, `Adbash Ej: ${data.adbashEj || ''}`),
+    React.createElement('p', null, `Corroboración %9: ${ (data.gemPit % 9 || 9) === (data.gemHebreaEj % 9 || 9) ? 'Armonía' : 'Fallback Canónico' }`)
+  );
+}
+ReactDOM.render(React.createElement(App), document.getElementById('root'));
+</script>

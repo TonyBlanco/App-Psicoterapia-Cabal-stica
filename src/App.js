@@ -1,37 +1,44 @@
-import React from 'react';
-function App() {
-  const otd = {TO: 1, PT: 8, TD: 14};
-  const cpData = {14: {freq: 4, decomp: 'P41 Servicio'}};
-  const laminaCP = Array.from({length: 100}, (_, i) => ({
-    num: i + 10,
-    freq: cpData[i + 10]?.freq || 0,
-    visual: '|'.repeat(cpData[i + 10]?.freq || 0),
-    decomp: cpData[i + 10]?.decomp || 'N/A'
-  }));
-  const sumaOtd = otd.TO + otd.PT + otd.TD;
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Add react-router-dom package.json if not
+
+function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    fetch('/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.token) {
+        localStorage.setItem('jwt', data.token);
+        localStorage.setItem('roles', JSON.stringify(data.roles)); // e.g., ['ilimitado', 'consulta1']
+        navigate('/dashboard'); // Redirect to dashboard
+      } else alert('Error Login: Verifique Credenciales');
+    })
+    .catch(e => alert('Desarmonía: Error Conexión'));
+  };
+
   return (
-    <div>
-      <h2>Panel A: Senderos OTD</h2>
-      <table>
-        <thead><tr><th>Sendero</th><th>Valor</th><th>Arcano</th><th>Función</th></tr></thead>
-        <tbody>
-          <tr><td>TO</td><td>{otd.TO}</td><td>El Mago</td><td>Base Unidad Voluntad</td></tr>
-          <tr><td>PT</td><td>{otd.PT}</td><td>La Justicia</td><td>Transición Fuerza Misión</td></tr>
-          <tr><td>TD</td><td>{otd.TD}</td><td>La Templanza</td><td>Misión Servicio Armonía</td></tr>
-        </tbody>
-      </table>
-      <p>Suma OTD: {sumaOtd} → {sumaOtd % 9 || 9} (Corrobora TD=14 → 5)</p>
-      <h2>Panel C: CP Lámina Repetidos 10-109</h2>
-      <div style={{display: 'grid', gridTemplateColumns: 'repeat(10, 1fr)', gap: '1px', background: '#ddd', margin: '10px 0'}}>
-        {laminaCP.map(cell => (
-          <div key={cell.num} style={{padding: '5px', border: '1px solid #ccc', textAlign: 'center', cursor: 'pointer', background: cell.freq >= 4 ? 'red' : 'white', color: cell.freq >= 4 ? 'white' : 'black'}}
-            onClick={() => alert(`CP ${cell.num}: Freq ${cell.freq} Visual ${cell.visual} Decomp ${cell.decomp}`)}
-          >
-            {cell.num} {cell.visual}
-          </div>
-        ))}
-      </div>
+    <div style={{ maxWidth: '400px', margin: '0 auto', padding: '20px', background: 'white', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+      <h1 style={{ textAlign: 'center', color: '#8B008B' }}>Cábala Profesional</h1>
+      <form onSubmit={e => { e.preventDefault(); handleLogin(); }}>
+        <label style={{ display: 'block', marginBottom: '5px' }}>Correo Electrónico:</label>
+        <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="usuario@ej.com" style={{ width: '100%', padding: '10px', marginBottom: '10px', border: '1px solid #ccc', borderRadius: '4px' }} required />
+        <label style={{ display: 'block', marginBottom: '5px' }}>Contraseña:</label>
+        <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="contraseña" style={{ width: '100%', padding: '10px', marginBottom: '10px', border: '1px solid #ccc', borderRadius: '4px' }} required />
+        <button type="submit" style={{ width: '100%', padding: '10px', background: '#8B008B', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Conectar</button>
+      </form>
+      <p style={{ textAlign: 'center', marginTop: '10px', fontSize: '14px' }}>
+        <a href="#" style={{ color: '#8B008B' }}>¿Olvidaste la contraseña?</a> | <a href="#" style={{ color: '#8B008B' }}>No tienes cuenta? Crea una</a>
+      </p>
+      <p style={{ textAlign: 'center', fontSize: '12px', color: '#666' }}>Acceso ilimitado: Consulta 1 persona | Imprimir análisis | Guardar consulta | Base datos apuntes | Base datos clientes | Calculadora cósmica | Ventana info breve | Menú asistencia | Comparativa 2 personas | Cálculo vibración conjunta</p>
     </div>
   );
 }
-export default App;
+
+export default Login;
